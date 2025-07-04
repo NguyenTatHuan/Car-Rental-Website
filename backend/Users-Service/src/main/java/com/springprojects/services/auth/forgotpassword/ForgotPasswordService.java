@@ -1,6 +1,6 @@
 package com.springprojects.services.auth.forgotpassword;
 
-import com.springprojects.dto.PasswordResetConfirmDto;
+import com.springprojects.dto.forgotpassword.PasswordResetConfirmDto;
 
 public interface ForgotPasswordService {
 

@@ -1,7 +1,7 @@
 package com.springprojects.services.auth.login;
 
-import com.springprojects.dto.LoginRequest;
-import com.springprojects.dto.LoginResponse;
+import com.springprojects.dto.login.LoginRequest;
+import com.springprojects.dto.login.LoginResponse;
 
 public interface LoginService {
 

@@ -1,7 +1,7 @@
 package com.springprojects.services.admin.user;
 
-import com.springprojects.dto.UserDto;
-import com.springprojects.dto.UserUpdateDto;
+import com.springprojects.dto.user.UserDto;
+import com.springprojects.dto.user.UserUpdateDto;
 import com.springprojects.entity.User;
 import com.springprojects.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

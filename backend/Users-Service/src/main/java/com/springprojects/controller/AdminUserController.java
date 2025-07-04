@@ -1,7 +1,7 @@
 package com.springprojects.controller;
 
-import com.springprojects.dto.UserDto;
-import com.springprojects.dto.UserUpdateDto;
+import com.springprojects.dto.user.UserDto;
+import com.springprojects.dto.user.UserUpdateDto;
 import com.springprojects.services.admin.user.AdminUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

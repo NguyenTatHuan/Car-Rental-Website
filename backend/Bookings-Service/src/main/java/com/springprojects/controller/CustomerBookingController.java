@@ -1,7 +1,8 @@
 package com.springprojects.controller;
 
-import com.springprojects.dto.BookingRequestDto;
-import com.springprojects.dto.BookingResponseDto;
+import com.springprojects.dto.booking.BookingRequestDto;
+import com.springprojects.dto.booking.BookingResponseDto;
+import com.springprojects.dto.booking.BookingUpdateDto;
 import com.springprojects.service.customer.booking.CustomerBookingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,13 @@ public class CustomerBookingController {
     public void cancelBooking(@RequestAttribute("userId") UUID userId,
                               @PathVariable UUID bookingId) {
         customerBookingService.cancelBooking(userId, bookingId);
+    }
+
+    @PutMapping("/{bookingId}")
+    public BookingResponseDto updateBooking(@RequestAttribute("userId") UUID userId,
+                                            @PathVariable UUID bookingId,
+                                            @Valid @RequestBody BookingUpdateDto dto) {
+        return customerBookingService.updateBooking(userId, bookingId, dto);
     }
 
 }

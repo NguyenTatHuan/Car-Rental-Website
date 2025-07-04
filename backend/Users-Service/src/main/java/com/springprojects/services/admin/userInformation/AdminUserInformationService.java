@@ -1,7 +1,7 @@
 package com.springprojects.services.admin.userInformation;
 
-import com.springprojects.dto.UserInformationDto;
-import com.springprojects.dto.UserInformationUpdateDto;
+import com.springprojects.dto.userInformation.UserInformationDto;
+import com.springprojects.dto.userInformation.UserInformationUpdateDto;
 
 import java.util.List;
 import java.util.UUID;

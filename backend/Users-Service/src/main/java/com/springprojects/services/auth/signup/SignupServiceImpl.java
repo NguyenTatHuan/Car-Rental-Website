@@ -2,19 +2,16 @@ package com.springprojects.services.auth.signup;
 
 import com.springprojects.configuration.WebSecurityConfiguration;
 import com.springprojects.dto.SignUpRequest;
-import com.springprojects.dto.UserDto;
-import com.springprojects.dto.UserInformationDto;
+import com.springprojects.dto.user.UserDto;
+import com.springprojects.dto.userInformation.UserInformationDto;
 import com.springprojects.entity.User;
 import com.springprojects.entity.UserInformation;
 import com.springprojects.enums.UserRole;
 import com.springprojects.enums.UserStatus;
 import com.springprojects.repository.UserInformationRepository;
 import com.springprojects.repository.UserRepository;
-import com.springprojects.services.jwt.UserService;
-import com.springprojects.utils.JWTUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -1,8 +1,8 @@
 package com.springprojects.services.auth.signup;
 
 import com.springprojects.dto.SignUpRequest;
-import com.springprojects.dto.UserDto;
-import com.springprojects.dto.UserInformationDto;
+import com.springprojects.dto.user.UserDto;
+import com.springprojects.dto.userInformation.UserInformationDto;
 
 public interface SignupService {
 

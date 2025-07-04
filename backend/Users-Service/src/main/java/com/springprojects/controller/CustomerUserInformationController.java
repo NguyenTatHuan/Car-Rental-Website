@@ -1,6 +1,6 @@
 package com.springprojects.controller;
 
-import com.springprojects.dto.UserInformationUpdateDto;
+import com.springprojects.dto.userInformation.UserInformationUpdateDto;
 import com.springprojects.entity.User;
 import com.springprojects.services.customer.userInformation.CustomerUserInformationService;
 import jakarta.validation.Valid;

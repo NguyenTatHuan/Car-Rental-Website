@@ -1,6 +1,6 @@
 package com.springprojects.controller;
 
-import com.springprojects.dto.BookingResponseDto;
+import com.springprojects.dto.booking.BookingResponseDto;
 import com.springprojects.enums.BookingStatus;
 import com.springprojects.service.admin.booking.AdminBookingService;
 import lombok.RequiredArgsConstructor;

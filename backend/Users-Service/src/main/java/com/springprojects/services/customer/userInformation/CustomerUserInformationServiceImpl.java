@@ -1,12 +1,10 @@
 package com.springprojects.services.customer.userInformation;
 
-import com.springprojects.dto.UserInformationDto;
-import com.springprojects.dto.UserInformationUpdateDto;
+import com.springprojects.dto.userInformation.UserInformationUpdateDto;
 import com.springprojects.entity.UserInformation;
 import com.springprojects.repository.UserInformationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Response</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+            padding: 30px;
+            text-align: center;
+            border-top: 4px solid;
+        }
+        .status-confirmed {
+            border-color: #2ecc71;
+        }
+        .status-rejected {
+            border-color: #e74c3c;
+        }
+        .header {
+            font-size: 24px;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        .info {
+            font-size: 16px;
+            color: #34495e;
+            margin: 10px 0;
+        }
+        .highlight {
+            font-weight: bold;
+            color: #2980b9;
+        }
+        .status-text-confirmed {
+            color: green;
+            font-weight: bold;
+        }
+        .status-text-rejected {
+            color: red;
+            font-weight: bold;
+        }
+        .footer {
+            margin-top: 30px;
+            font-size: 12px;
+            color: #95a5a6;
+            border-top: 1px solid #ecf0f1;
+            padding-top: 15px;
+        }
+    </style>
+</head>
+<body>
+<div class="container"
+     th:classappend="${status.name() == 'CONFIRMED'} ? ' status-confirmed' : ' status-rejected'">
+
+    <h1 class="header">Hello <span th:text="${fullName}">Customer</span>,</h1>
+
+    <p class="info">
+        Your booking for <span class="highlight" th:text="${carName}">Car name</span> has been
+        <span th:if="${status.name() == 'CONFIRMED'}" class="status-text-confirmed">approved</span>
+        <span th:if="${status.name() == 'REJECTED'}" class="status-text-rejected">rejected</span>.
+    </p>
+
+    <p class="info">
+        Rental period: from <span class="highlight" th:text="${startTime}">01/07/2025</span> to
+        <span class="highlight" th:text="${endTime}">03/07/2025</span>
+    </p>
+
+    <p class="info" th:if="${status.name() == 'CONFIRMED'}">
+        Total price: <span class="highlight" th:text="${totalPrice}">2,500,000 VND</span>
+    </p>
+
+    <p class="info" th:if="${status.name() == 'REJECTED'}" style="margin-top: 20px;">
+        Unfortunately, your booking request has been rejected.<br>
+        Please try booking a different car or contact support.
+    </p>
+
+    <p class="info" style="margin-top: 20px;">
+        Thank you for using our Car Rental service!
+    </p>
+
+    <div class="footer">
+        © 2025 Car Rental System
+    </div>
+</div>
+</body>
+</html>

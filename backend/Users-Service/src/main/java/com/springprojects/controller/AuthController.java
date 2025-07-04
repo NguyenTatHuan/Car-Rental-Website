@@ -1,6 +1,14 @@
 package com.springprojects.controller;
 
 import com.springprojects.dto.*;
+import com.springprojects.dto.forgotpassword.PasswordResetConfirmDto;
+import com.springprojects.dto.forgotpassword.PasswordResetRequestDto;
+import com.springprojects.dto.login.LoginRequest;
+import com.springprojects.dto.login.LoginResponse;
+import com.springprojects.dto.twofactor.TwoFactorRequestDto;
+import com.springprojects.dto.twofactor.TwoFactorResponseDto;
+import com.springprojects.dto.user.UserDto;
+import com.springprojects.dto.userInformation.UserInformationDto;
 import com.springprojects.services.auth.forgotpassword.ForgotPasswordService;
 import com.springprojects.services.auth.login.LoginService;
 import com.springprojects.services.auth.logout.LogoutService;

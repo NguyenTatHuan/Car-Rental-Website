@@ -1,11 +1,9 @@
 package com.springprojects.services.auth.login;
 
-import com.springprojects.configuration.WebSecurityConfiguration;
-import com.springprojects.dto.LoginRequest;
-import com.springprojects.dto.LoginResponse;
+import com.springprojects.dto.login.LoginRequest;
+import com.springprojects.dto.login.LoginResponse;
 import com.springprojects.entity.User;
 import com.springprojects.enums.UserRole;
-import com.springprojects.repository.UserInformationRepository;
 import com.springprojects.repository.UserRepository;
 import com.springprojects.services.jwt.UserService;
 import com.springprojects.utils.JWTUtil;

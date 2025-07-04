@@ -1,8 +1,8 @@
 package com.springprojects.services.auth.twofactorverify;
 
-import com.springprojects.dto.LoginRequest;
-import com.springprojects.dto.TwoFactorRequestDto;
-import com.springprojects.dto.TwoFactorResponseDto;
+import com.springprojects.dto.login.LoginRequest;
+import com.springprojects.dto.twofactor.TwoFactorRequestDto;
+import com.springprojects.dto.twofactor.TwoFactorResponseDto;
 
 public interface TwoFactorService {
 

@@ -1,7 +1,7 @@
 package com.springprojects.controller;
 
-import com.springprojects.dto.UserInformationDto;
-import com.springprojects.dto.UserInformationUpdateDto;
+import com.springprojects.dto.userInformation.UserInformationDto;
+import com.springprojects.dto.userInformation.UserInformationUpdateDto;
 import com.springprojects.services.admin.userInformation.AdminUserInformationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

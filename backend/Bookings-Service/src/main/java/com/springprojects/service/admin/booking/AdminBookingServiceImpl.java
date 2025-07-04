@@ -1,10 +1,16 @@
 package com.springprojects.service.admin.booking;
 
-import com.springprojects.dto.BookingResponseDto;
+import com.springprojects.client.CarClient;
+import com.springprojects.client.UserClient;
+import com.springprojects.dto.booking.BookingResponseDto;
+import com.springprojects.dto.client.CarInformationDto;
+import com.springprojects.dto.client.CustomerInformationDto;
+import com.springprojects.dto.kafka.BookingResponseEvent;
 import com.springprojects.entity.Booking;
 import com.springprojects.entity.BookingHistory;
 import com.springprojects.enums.BookingStatus;
 import com.springprojects.enums.HistoryAction;
+import com.springprojects.kafka.BookingEventProducer;
 import com.springprojects.repository.BookingHistoryRepository;
 import com.springprojects.repository.BookingRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +28,12 @@ public class AdminBookingServiceImpl implements AdminBookingService {
     private final BookingRepository bookingRepository;
 
     private final BookingHistoryRepository historyRepository;
+
+    private final UserClient userClient;
+
+    private final CarClient carClient;
+
+    private final BookingEventProducer bookingEventProducer;
 
     private BookingResponseDto entityToDto(Booking booking) {
         return BookingResponseDto.builder()
@@ -72,6 +84,24 @@ public class AdminBookingServiceImpl implements AdminBookingService {
         booking.setStatus(status);
         Booking updated = bookingRepository.save(booking);
         saveHistory(updated, HistoryAction.UPDATED);
+
+        CustomerInformationDto customerInformation = userClient.getCustomerInformation(updated.getUserId());
+        CarInformationDto carInformation = carClient.getCarInformation(updated.getCarId());
+
+        if (status == BookingStatus.CONFIRMED || status == BookingStatus.REJECTED) {
+            BookingResponseEvent event = new BookingResponseEvent();
+            event.setBookingId(updated.getId());
+            event.setUserId(updated.getUserId());
+            event.setCarId(updated.getCarId());
+            event.setEmail(customerInformation.getEmail());
+            event.setFullName(customerInformation.getFullName());
+            event.setCarName(carInformation.getCarName());
+            event.setTotalPrice(updated.getTotalPrice());
+            event.setStartTime(updated.getStartTime());
+            event.setEndTime(updated.getEndTime());
+            event.setStatus(status);
+            bookingEventProducer.sendBookingResponseEvent(event);
+        }
 
         return entityToDto(updated);
     }

@@ -1,7 +1,7 @@
 package com.springprojects.services.auth.forgotpassword;
 
 import com.springprojects.configuration.WebSecurityConfiguration;
-import com.springprojects.dto.PasswordResetConfirmDto;
+import com.springprojects.dto.forgotpassword.PasswordResetConfirmDto;
 import com.springprojects.entity.PasswordResetToken;
 import com.springprojects.entity.User;
 import com.springprojects.repository.TokenRepository;
@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor

@@ -1,6 +1,6 @@
 package com.springprojects.service.admin.booking;
 
-import com.springprojects.dto.BookingResponseDto;
+import com.springprojects.dto.booking.BookingResponseDto;
 import com.springprojects.enums.BookingStatus;
 
 import java.util.List;

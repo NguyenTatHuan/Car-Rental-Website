@@ -1,5 +1,6 @@
 package com.springprojects.controller;
 
+import com.springprojects.dto.CarInformationDto;
 import com.springprojects.entity.Car;
 import com.springprojects.repository.CarRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,11 +20,17 @@ public class InternalCarController {
 
     private final CarRepository carRepository;
 
-    @GetMapping("/{id}/price")
-    public double getPricePerDay(@PathVariable UUID id) {
+    @GetMapping("/{id}/information")
+    public CarInformationDto getCarInformation(@PathVariable UUID id) {
         Car car = carRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Car not found"));
-        return car.getPricePerDay();
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found car with id:" + id));
+
+        String carName = car.getBrand().getName() + " " + car.getModel() + " - " + car.getLicensePlate();
+
+        return CarInformationDto.builder()
+                .carName(carName)
+                .pricePerDay(car.getPricePerDay())
+                .build();
     }
 
 }
