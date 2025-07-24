@@ -13,4 +13,6 @@ public interface FeedbackRepository extends JpaRepository<Feedback, UUID> {
 
     Optional<Feedback> findByIdAndUserId(UUID feedbackId, UUID userId);
 
+    List<Feedback> findAllByCarId(UUID carId);
+
 }

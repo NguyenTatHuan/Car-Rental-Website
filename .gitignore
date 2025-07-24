@@ -3,3 +3,8 @@
 *.iml
 .idea/
 *.log
+**/application.properties
+**/target/
+*.iml
+.idea/
+*.log

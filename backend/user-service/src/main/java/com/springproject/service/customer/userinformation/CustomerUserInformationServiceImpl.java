@@ -1,8 +1,10 @@
 package com.springproject.service.customer.userinformation;
 
+import com.springproject.dto.rabbitmq.UserUpdatedEvent;
 import com.springproject.dto.userinformation.UserInformationUpdateDto;
 import com.springproject.entity.User;
 import com.springproject.entity.UserInformation;
+import com.springproject.rabbitmq.UserEventProducer;
 import com.springproject.repository.UserInformationRepository;
 import com.springproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,8 @@ public class CustomerUserInformationServiceImpl implements CustomerUserInformati
     private final UserRepository userRepository;
 
     private final UserInformationRepository userInformationRepository;
+
+    private final UserEventProducer userEventProducer;
 
     private String getCurrentUsername() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -61,6 +65,8 @@ public class CustomerUserInformationServiceImpl implements CustomerUserInformati
         UserInformation userInformation = userInformationRepository.findByUserId(user.getId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No user information found"));
 
+        boolean fullNameChanged = false;
+
         if (dto.getEmail() != null) {
             if (!dto.getEmail().matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is not valid");
@@ -95,7 +101,10 @@ public class CustomerUserInformationServiceImpl implements CustomerUserInformati
         }
 
         if (dto.getFullName() != null && !dto.getFullName().isBlank()) {
-            userInformation.setFullName(dto.getFullName());
+            if (!dto.getFullName().equals(userInformation.getFullName())) {
+                fullNameChanged = true;
+                userInformation.setFullName(dto.getFullName());
+            }
         }
 
         if (dto.getBirthday() != null) {
@@ -118,6 +127,15 @@ public class CustomerUserInformationServiceImpl implements CustomerUserInformati
         }
 
         userInformationRepository.save(userInformation);
+
+        if (fullNameChanged) {
+            UserUpdatedEvent event = new UserUpdatedEvent();
+            event.setUserId(user.getId());
+            event.setNewUsername(user.getUsername());
+            event.setNewFullName(userInformation.getFullName());
+            userEventProducer.sendUserUpdatedEvent(event);
+        }
+
         return entityToDto(userInformation);
     }
 

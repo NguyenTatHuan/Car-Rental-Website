@@ -32,14 +32,12 @@ public class UserInformation {
     @Column(nullable = false)
     private String fullName;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String citizenID;
 
-    @Column(nullable = false)
     private LocalDate birthday;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private UserGender gender;
 
     @Column(nullable = false, unique = true)
@@ -48,10 +46,8 @@ public class UserInformation {
     @Column(nullable = false, unique = true)
     private String phone;
 
-    @Column(nullable = false)
     private String address;
 
-    @Column(nullable = false)
     private String nationality;
 
     @CreationTimestamp

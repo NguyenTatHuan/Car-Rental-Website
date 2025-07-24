@@ -63,6 +63,31 @@ services:
     networks:
       - microservice-net
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: rabbitmq
+      RABBITMQ_DEFAULT_PASS: password
+    networks:
+      - microservice-net
+
+  mongodb:
+    image: mongo:7
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+    volumes:
+      - mongodb-data:/data/db
+    networks:
+      - microservice-net
+
   user-service:
     build: ./user-service
     container_name: user-service
@@ -71,10 +96,13 @@ services:
     depends_on:
       - eureka-server
       - redis
+      - rabbitmq
       - user-postgres
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_DATA_REDIS_HOST=redis
       - SPRING_DATASOURCE_URL=jdbc:postgresql://user-postgres:5432/Car_Rental_User_Database
     networks:
       - microservice-net
@@ -144,6 +172,40 @@ services:
     networks:
       - microservice-net
 
+  feedback-service:
+    build: ./feedback-service
+    container_name: feedback-service
+    ports:
+      - "8086:8086"
+    depends_on:
+      - eureka-server
+      - kafka
+      - feedback-postgres
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://feedback-postgres:5432/Car_Rental_Feedback_Database
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    networks:
+      - microservice-net
+
+  chat-service:
+    build: ./chat-service
+    container_name: chat-service
+    ports:
+      - "8087:8087"
+    depends_on:
+      - eureka-server
+      - rabbitmq
+      - mongodb
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/Car_Rental_Chat_Database
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+    networks:
+      - microservice-net
+
   user-postgres:
     image: postgres:15
     container_name: user-postgres
@@ -200,12 +262,28 @@ services:
     networks:
       - microservice-net
 
+  feedback-postgres:
+    image: postgres:15
+    container_name: feedback-postgres
+    environment:
+      POSTGRES_DB: Car_Rental_Feedback_Database
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5437:5432"
+    volumes:
+      - feedback-postgres-data:/var/lib/postgresql/data
+    networks:
+      - microservice-net
+
 volumes:
   redis-data:
+  mongodb-data:
   user-postgres-data:
   car-postgres-data:
   booking-postgres-data:
   payment-postgres-data:
+  feedback-postgres-data:
 
 networks:
   microservice-net:

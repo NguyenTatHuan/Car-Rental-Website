@@ -40,4 +40,5 @@ public class AdminRatingSummaryServiceImpl implements AdminRatingSummaryService 
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found rating summary for carId: " + carId));
         return mapToDto(summary);
     }
+
 }

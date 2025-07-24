@@ -1,8 +1,11 @@
 package com.springproject.service.admin.userInformation;
 
+import com.springproject.dto.rabbitmq.UserDeletedEvent;
+import com.springproject.dto.rabbitmq.UserUpdatedEvent;
 import com.springproject.dto.userinformation.UserInformationDto;
 import com.springproject.dto.userinformation.UserInformationUpdateDto;
 import com.springproject.entity.UserInformation;
+import com.springproject.rabbitmq.UserEventProducer;
 import com.springproject.repository.UserInformationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,6 +21,8 @@ import java.util.stream.Collectors;
 public class AdminUserInformationServiceImpl implements AdminUserInformationService {
 
     private final UserInformationRepository userInformationRepository;
+
+    private final UserEventProducer userEventProducer;
 
     private UserInformationDto entityToDto(UserInformation userInformation) {
         UserInformationDto userInformationDto = new UserInformationDto();
@@ -55,8 +60,10 @@ public class AdminUserInformationServiceImpl implements AdminUserInformationServ
     @Override
     public UserInformationDto updateUser(UUID id, UserInformationUpdateDto dto) {
         UserInformation userInformation = userInformationRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Not found user information with ID: " + id));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found user information with ID: " + id));
+
+        boolean fullNameUpdated = false;
+        String oldFullName = userInformation.getFullName();
 
         if (dto.getEmail() != null) {
             if (!dto.getEmail().matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
@@ -95,7 +102,10 @@ public class AdminUserInformationServiceImpl implements AdminUserInformationServ
             if (dto.getFullName().isBlank()) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Full name must not be blank");
             }
-            userInformation.setFullName(dto.getFullName());
+            if (!dto.getFullName().equals(oldFullName)) {
+                userInformation.setFullName(dto.getFullName());
+                fullNameUpdated = true;
+            }
         }
 
         if (dto.getBirthday() != null) {
@@ -124,15 +134,27 @@ public class AdminUserInformationServiceImpl implements AdminUserInformationServ
         }
 
         userInformationRepository.save(userInformation);
+
+        if (fullNameUpdated) {
+            UserUpdatedEvent event = new UserUpdatedEvent();
+            event.setUserId(userInformation.getUser().getId());
+            event.setNewUsername(userInformation.getUser().getUsername());
+            event.setNewFullName(userInformation.getFullName());
+            userEventProducer.sendUserUpdatedEvent(event);
+        }
+
         return entityToDto(userInformation);
     }
 
     @Override
     public void deleteUser(UUID id) {
         UserInformation userInformation = userInformationRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Not found user information with ID: " + id));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found user information with ID: " + id));
         userInformationRepository.delete(userInformation);
+
+        UserDeletedEvent event = new UserDeletedEvent();
+        event.setUserId(userInformation.getUser().getId());
+        userEventProducer.sendUserDeletedEvent(event);
     }
 
 }

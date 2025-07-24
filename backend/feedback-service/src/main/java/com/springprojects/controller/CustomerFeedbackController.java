@@ -29,29 +29,30 @@ public class CustomerFeedbackController {
 
     @PutMapping("/{feedbackId}")
     public ResponseEntity<FeedbackDto> updateFeedback(
+            @RequestAttribute("userId") UUID userId,
             @PathVariable UUID feedbackId,
             @Valid @RequestBody FeedbackUpdateDto dto
     ) {
-        FeedbackDto updatedFeedback = customerFeedbackService.updateFeedback(feedbackId, dto);
+        FeedbackDto updatedFeedback = customerFeedbackService.updateFeedback(feedbackId, userId, dto);
         return ResponseEntity.ok(updatedFeedback);
     }
 
     @DeleteMapping("/{feedbackId}")
-    public ResponseEntity<Void> deleteFeedback(@PathVariable UUID feedbackId) {
-        customerFeedbackService.deleteFeedback(feedbackId);
+    public ResponseEntity<Void> deleteFeedback(@PathVariable UUID feedbackId, @RequestAttribute("userId") UUID userId) {
+        customerFeedbackService.deleteFeedback(feedbackId, userId);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<FeedbackDto>> getAllFeedbacksByUser(@PathVariable UUID userId) {
+    @GetMapping
+    public ResponseEntity<List<FeedbackDto>> getAllFeedbacksByUser(@RequestAttribute("userId") UUID userId) {
         List<FeedbackDto> feedbackList = customerFeedbackService.getAllFeedbacksByUser(userId);
         return ResponseEntity.ok(feedbackList);
     }
 
-    @GetMapping("/{feedbackId}/user/{userId}")
+    @GetMapping("/{feedbackId}")
     public ResponseEntity<FeedbackDto> getFeedbackById(
             @PathVariable UUID feedbackId,
-            @PathVariable UUID userId
+            @RequestAttribute("userId") UUID userId
     ) {
         FeedbackDto feedback = customerFeedbackService.getFeedbackById(feedbackId, userId);
         return ResponseEntity.ok(feedback);

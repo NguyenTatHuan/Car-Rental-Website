@@ -1,8 +1,11 @@
 package com.springproject.service.admin.user;
 
+import com.springproject.dto.rabbitmq.UserDeletedEvent;
+import com.springproject.dto.rabbitmq.UserUpdatedEvent;
 import com.springproject.dto.user.UserDto;
 import com.springproject.dto.user.UserUpdateDto;
 import com.springproject.entity.User;
+import com.springproject.rabbitmq.UserEventProducer;
 import com.springproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,6 +21,8 @@ import java.util.stream.Collectors;
 public class AdminUserServiceImpl implements AdminUserService {
 
     private final UserRepository userRepository;
+
+    private final UserEventProducer userEventProducer;
 
     private UserDto entityToDto(User user) {
         UserDto userDto = new UserDto();
@@ -62,15 +67,19 @@ public class AdminUserServiceImpl implements AdminUserService {
         if (userUpdateDto.getStatus() != null) {
             user.setStatus(userUpdateDto.getStatus());
         }
+
         return entityToDto(userRepository.save(user));
     }
 
     @Override
     public void deleteUser(UUID id) {
-        if (!userRepository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found user with ID: " + id);
-        }
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found user with ID: " + id));
+
         userRepository.deleteById(id);
+
+        UserDeletedEvent event = new UserDeletedEvent(user.getId());
+        userEventProducer.sendUserDeletedEvent(event);
     }
 
 }

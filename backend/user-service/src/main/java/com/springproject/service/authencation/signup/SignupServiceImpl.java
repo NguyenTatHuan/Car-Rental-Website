@@ -1,10 +1,12 @@
 package com.springproject.service.authencation.signup;
 
+import com.springproject.dto.rabbitmq.UserCreatedEvent;
 import com.springproject.dto.signup.SignUpRequest;
 import com.springproject.entity.User;
 import com.springproject.entity.UserInformation;
 import com.springproject.enums.UserRole;
 import com.springproject.enums.UserStatus;
+import com.springproject.rabbitmq.UserEventProducer;
 import com.springproject.repository.UserInformationRepository;
 import com.springproject.repository.UserRepository;
 import com.springproject.service.email.EmailService;
@@ -41,6 +43,8 @@ public class SignupServiceImpl implements SignupService {
     private final SignupRateLimitService signupRateLimitService;
 
     private final IpRateLimitService ipRateLimitService;
+
+    private final UserEventProducer userEventProducer;
 
     private String generateOtp() {
         SecureRandom random = new SecureRandom();
@@ -92,10 +96,6 @@ public class SignupServiceImpl implements SignupService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Customer already exists with this email");
         }
 
-        if (userInformationRepository.findFirstByCitizenID(signupRequest.getCitizenID()).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Customer already exists with this citizen ID");
-        }
-
         if (userInformationRepository.findFirstByPhone(signupRequest.getPhone()).isPresent()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Customer already exists with this phone number");
         }
@@ -125,16 +125,24 @@ public class SignupServiceImpl implements SignupService {
 
         UserInformation info = new UserInformation();
         info.setFullName(request.getFullName());
-        info.setCitizenID(request.getCitizenID());
-        info.setBirthday(request.getBirthday());
-        info.setGender(request.getGender());
+        info.setCitizenID(null);
+        info.setBirthday(null);
+        info.setGender(null);
         info.setEmail(request.getEmail());
         info.setPhone(request.getPhone());
-        info.setAddress(request.getAddress());
-        info.setNationality(request.getNationality());
+        info.setAddress(null);
+        info.setNationality(null);
         info.setUser(createdUser);
         userInformationRepository.save(info);
 
+        UserCreatedEvent event = new UserCreatedEvent(
+                createdUser.getId(),
+                createdUser.getUsername(),
+                info.getFullName(),
+                info.getEmail()
+        );
+
+        userEventProducer.sendUserCreatedEvent(event);
         signupRateLimitService.resetAttempts(email);
         signupRequestRedisService.deleteRequest(email);
     }

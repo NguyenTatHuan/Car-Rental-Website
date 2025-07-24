@@ -46,6 +46,10 @@ public class RouteConfig {
                         "/api/admin/rating-summary/**",
                         "/api/customer/feedback/**"
                 ).uri("lb://FEEDBACK-SERVICE"))
+                .route("chat-service", r -> r.path(
+                        "/api/customer/conversation/**",
+                        "/api/admin/conversation/**"
+                ).uri("lb://CHAT-SERVICE"))
                 .build();
     }
 
