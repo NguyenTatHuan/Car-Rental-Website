@@ -1,6 +1,7 @@
 package com.springprojects.entity;
 
 import com.springprojects.enums.MessageType;
+import com.springprojects.enums.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,9 +27,9 @@ public class Message {
 
     private Instant sentAt;
 
-    private String senderId;
+    private UUID senderId;
 
-    private String senderType;
+    private UserRole senderType;
 
     private String content;
 

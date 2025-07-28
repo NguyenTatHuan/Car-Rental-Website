@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-postgres
+  labels:
+    app: payment-postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment-postgres
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: payment-postgres
+    spec:
+      containers:
+        - name: payment-postgres
+          image: postgres:15
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: Car_Rental_Payment_Database
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: password
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: payment-postgres-storage
+      volumes:
+        - name: payment-postgres-storage
+          persistentVolumeClaim:
+            claimName: payment-postgres-data

@@ -12,4 +12,6 @@ public interface MessageRepository extends MongoRepository<Message, UUID> {
 
     List<Message> findByConversationId(UUID conversationId);
 
+    List<Message> findByConversationIdOrderBySentAtAsc(UUID conversationId);
+
 }

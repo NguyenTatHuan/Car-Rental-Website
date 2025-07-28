@@ -63,6 +63,25 @@ services:
     networks:
       - microservice-net
 
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
+    container_name: elasticsearch
+    ports:
+      - "9200:9200"
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - bootstrap.memory_lock=true
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    networks:
+      - microservice-net
+
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
@@ -98,6 +117,7 @@ services:
       - redis
       - rabbitmq
       - user-postgres
+      - elasticsearch
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
@@ -279,6 +299,7 @@ services:
 volumes:
   redis-data:
   mongodb-data:
+  elasticsearch-data:
   user-postgres-data:
   car-postgres-data:
   booking-postgres-data:

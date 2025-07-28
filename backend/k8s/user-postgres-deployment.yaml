@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-postgres
+  labels:
+    io.kompose.service: user-postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: user-postgres
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        io.kompose.service: user-postgres
+        io.kompose.network/microservice-net: "true"
+    spec:
+      containers:
+        - name: user-postgres
+          image: postgres:15
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: Car_Rental_User_Database
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: password
+          volumeMounts:
+            - name: user-postgres-data
+              mountPath: /var/lib/postgresql/data
+      restartPolicy: Always
+      volumes:
+        - name: user-postgres-data
+          persistentVolumeClaim:
+            claimName: user-postgres-data

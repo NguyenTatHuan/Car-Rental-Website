@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: booking-postgres
+  labels:
+    app: booking-postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: booking-postgres
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: booking-postgres
+    spec:
+      containers:
+        - name: booking-postgres
+          image: postgres:15
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: POSTGRES_DB
+              value: Car_Rental_Booking_Database
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: password
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: booking-postgres-volume
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: booking-postgres-volume
+          persistentVolumeClaim:
+            claimName: booking-postgres-data
