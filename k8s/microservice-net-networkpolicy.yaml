@@ -1,0 +1,15 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: microservice-net
+spec:
+  podSelector:
+    matchLabels:
+      io.kompose.network/microservice-net: "true"
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          io.kompose.network/microservice-net: "true"
+  policyTypes:
+  - Ingress

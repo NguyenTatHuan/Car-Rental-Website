@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Booking Pending</title>
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #2c3e50, #3498db);
+      color: #2c3e50;
+    }
+
+    .wrapper {
+      width: 100%;
+      display: flex;
+      justify-content: flex-start;
+      padding: 40px 0;
+      box-sizing: border-box;
+    }
+
+    .container {
+      width: 100%;
+      background-color: #ffffff;
+      border-left: 8px solid #f39c12;
+      border-radius: 12px 0 0 12px;
+      padding: 30px 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      box-sizing: border-box;
+    }
+
+    .greeting {
+      margin: 0;
+      font-size: 30px;
+      font-weight: 700;
+      color: #34495e;
+    }
+
+    .info {
+      font-size: 18px;
+      color: #34495e;
+      margin: 20px 0;
+      line-height: 1.6;
+    }
+
+    .highlight {
+      font-weight: bold;
+      color: #e67e22;
+    }
+
+    .footer {
+      margin-top: 30px;
+      font-size: 13px;
+      color: #95a5a6;
+      border-top: 1px solid #ecf0f1;
+      padding-top: 15px;
+    }
+
+    .mobile-break {
+      display: none;
+    }
+
+    @media (max-width: 480px) {
+      .wrapper {
+        padding: 20px 0;
+        display: block;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        padding: 20px 15px;
+        border-radius: 0;
+        border-left: none;
+        border-top: 6px solid #f39c12;
+      }
+
+      .greeting {
+        font-size: 20px;
+      }
+
+      .info {
+        font-size: 14px;
+      }
+
+      .mobile-break {
+        display: inline;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="container">
+      <div style="text-align: left; margin-bottom: 20px;">
+        <table cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
+          <tr>
+            <td style="vertical-align: middle; width: 70px;">
+              <img src="https://mercedes-luxury.sitemeta.net/wp-content/uploads/sites/289/2022/02/logo_mercedes_02-1.png"
+                   alt="Logo"
+                   style="max-height: 60px; border-radius: 8px;" />
+            </td>
+            <td style="padding-left: 20px; vertical-align: middle;">
+              <h1 class="greeting">
+                Hello, <span th:text="${fullName}">fullName</span>
+              </h1>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <p class="info">
+        You have submitted a booking request for
+        <br class="mobile-break" />
+        <span class="highlight" th:text="${carName}">CarName</span>.
+      </p>
+
+      <p class="info">
+        Rental period:
+        <br class="mobile-break" />
+        from
+        <span class="highlight" th:text="${startTime}">01/07/2025</span>
+        to
+        <span class="highlight" th:text="${endTime}">03/07/2025</span>.
+      </p>
+
+      <p class="info">
+        Your request is under review. We will get back to you as soon as possible.
+      </p>
+
+      <div class="footer">
+        Thank you,<br />
+        MIOTO Support Team
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+

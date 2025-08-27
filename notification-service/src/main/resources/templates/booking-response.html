@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Booking Response</title>
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #2c3e50, #3498db);
+      color: #2c3e50;
+    }
+
+    .wrapper {
+      width: 100%;
+      display: flex;
+      justify-content: flex-start;
+      padding: 40px 0;
+      box-sizing: border-box;
+    }
+
+    .container {
+      width: 100%;
+      background-color: #ffffff;
+      border-left: 8px solid;
+      border-radius: 12px 0 0 12px;
+      padding: 30px 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      box-sizing: border-box;
+    }
+
+    .status-confirmed {
+      border-color: #27ae60;
+    }
+
+    .status-rejected {
+      border-color: #e74c3c;
+    }
+
+    .greeting {
+      margin: 0;
+      font-size: 30px;
+      font-weight: 700;
+      color: #34495e;
+    }
+
+    .info {
+      font-size: 18px;
+      color: #34495e;
+      margin: 20px 0;
+      line-height: 1.6;
+    }
+
+    .highlight {
+      font-weight: bold;
+      color: #2980b9;
+    }
+
+    .status-text-confirmed {
+      font-weight: bold;
+      color: #27ae60;
+    }
+
+    .status-text-rejected {
+      font-weight: bold;
+      color: #e74c3c;
+    }
+
+    .footer {
+      margin-top: 30px;
+      font-size: 13px;
+      color: #95a5a6;
+      border-top: 1px solid #ecf0f1;
+      padding-top: 15px;
+    }
+
+    .mobile-break {
+      display: none;
+    }
+
+    @media (max-width: 480px) {
+      .wrapper {
+        padding: 20px 0;
+        display: block;
+      }
+
+      .container {
+        width: 100%;
+        margin: 0;
+        padding: 20px 15px;
+        border-radius: 0;
+        border-left: none;
+        border-top: 6px solid;
+      }
+
+      .greeting {
+        font-size: 20px;
+      }
+
+      .info {
+        font-size: 14px;
+      }
+
+      .mobile-break {
+        display: inline;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="container"
+         th:classappend="${status.name() == 'CONFIRMED'} ? ' status-confirmed' : ' status-rejected'">
+
+      <div style="text-align: left; margin-bottom: 20px;">
+        <table cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
+          <tr>
+            <td style="vertical-align: middle; width: 70px;">
+              <img src="https://mercedes-luxury.sitemeta.net/wp-content/uploads/sites/289/2022/02/logo_mercedes_02-1.png"
+                   alt="Mercedes Logo"
+                   style="max-height: 60px; border-radius: 8px;" />
+            </td>
+            <td style="padding-left: 20px; vertical-align: middle;">
+              <h1 class="greeting">Hello, <span th:text="${fullName}">fullName</span></h1>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <p class="info">
+        Your booking for
+        <span class="highlight" th:text="${carName}">CarName</span>
+        <br class="mobile-break" />
+        has been
+        <span th:if="${status.name() == 'CONFIRMED'}" class="status-text-confirmed">confirmed</span>
+        <span th:if="${status.name() == 'REJECTED'}" class="status-text-rejected">rejected</span>.
+      </p>
+
+      <p class="info">
+        Rental period:
+        <br class="mobile-break" />
+        from <span class="highlight" th:text="${startTime}">01/07/2025</span>
+        to <span class="highlight" th:text="${endTime}">03/07/2025</span>
+      </p>
+
+      <p class="info" th:if="${status.name() == 'CONFIRMED'}">
+        Total price: <span class="highlight" th:text="${totalPrice}">2,500,000 VND</span>
+      </p>
+
+      <p class="info" th:if="${status.name() == 'REJECTED'}" style="margin-top: 20px;">
+        Unfortunately, your booking request was not approved.<br />
+        Please try another vehicle or contact our support team.
+      </p>
+
+      <p class="info" style="margin-top: 20px;">
+        Thank you for choosing our service!
+      </p>
+
+      <div class="footer">
+        MIOTO Support Team
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+

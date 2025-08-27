@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: booking-postgres
+  labels:
+    app: booking-postgres
+spec:
+  type: ClusterIP
+  selector:
+    app: booking-postgres
+  ports:
+    - name: postgres
+      port: 5435
+      targetPort: 5432
+      protocol: TCP

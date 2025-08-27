@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: feedback-postgres
+  labels:
+    app: feedback-postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: feedback-postgres
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: feedback-postgres
+    spec:
+      containers:
+        - name: feedback-postgres
+          image: postgres:15
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: Car_Rental_Feedback_Database
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: password
+          volumeMounts:
+            - name: feedback-postgres-storage
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: feedback-postgres-storage
+          persistentVolumeClaim:
+            claimName: feedback-postgres-data

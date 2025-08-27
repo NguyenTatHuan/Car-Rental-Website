@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+  labels:
+    io.kompose.service: user-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: user-service
+  template:
+    metadata:
+      labels:
+        io.kompose.service: user-service
+        io.kompose.network/microservice-net: "true"
+    spec:
+      containers:
+        - name: user-service
+          image: user-service
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8081
+          env:
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: http://eureka-server:8761/eureka
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://user-postgres:5432/Car_Rental_User_Database
+            - name: SPRING_DATA_REDIS_HOST
+              value: redis
+            - name: SPRING_PROFILES_ACTIVE
+              value: docker
+            - name: SPRING_RABBITMQ_HOST
+              value: rabbitmq
+      restartPolicy: Always

@@ -1,0 +1,34 @@
+package com.springproject.controller;
+
+import com.springproject.dto.userinformation.UserInformationUpdateDto;
+import com.springproject.service.customer.userinformation.CustomerUserInformationService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
+
+@RestController
+@RequestMapping("/api/customer/user-information")
+@RequiredArgsConstructor
+@PreAuthorize("hasRole('CUSTOMER')")
+public class CustomerUserInformationController {
+
+    private final CustomerUserInformationService customerUserInformationService;
+
+    @GetMapping
+    public ResponseEntity<UserInformationUpdateDto> getMyInformation(@RequestAttribute("userId") UUID userId) {
+        return ResponseEntity.ok(customerUserInformationService.getMyInformation(userId));
+    }
+
+    @PutMapping
+    public ResponseEntity<UserInformationUpdateDto> updateMyInformation(
+            @RequestAttribute("userId") UUID userId,
+            @Valid @RequestBody UserInformationUpdateDto dto
+    ) {
+        return ResponseEntity.ok(customerUserInformationService.updateMyInformation(userId, dto));
+    }
+
+}

@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: car-service
+  labels:
+    app: car-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: car-service
+  template:
+    metadata:
+      labels:
+        app: car-service
+    spec:
+      containers:
+        - name: car-service
+          image: car-service
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: http://eureka-server:8761/eureka
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://car-postgres:5432/Car_Rental_Car_Database
+            - name: SPRING_PROFILES_ACTIVE
+              value: docker
+          ports:
+            - containerPort: 8082
